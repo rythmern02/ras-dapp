@@ -1,6 +1,7 @@
-// hooks/useWallet.ts
-import { useState, useCallback } from 'react';
-import { ethers, BrowserProvider, Signer, Contract } from 'ethers';
+"use client"
+
+import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
+import { ethers, BrowserProvider, Signer } from 'ethers';
 
 // Rootstock Testnet Configuration (Moved for reusability)
 const RSK_TESTNET = {
@@ -23,7 +24,9 @@ interface WalletState {
   switchNetwork: () => Promise<void>;
 }
 
-export const useWallet = (): WalletState => {
+const WalletContext = createContext<WalletState | undefined>(undefined);
+
+export const WalletProvider = ({ children }: { children: ReactNode }) => {
   const [address, setAddress] = useState<string | null>(null);
   const [provider, setProvider] = useState<BrowserProvider | null>(null);
   const [signer, setSigner] = useState<Signer | null>(null);
@@ -75,7 +78,6 @@ export const useWallet = (): WalletState => {
     }
   }, []);
 
-
   const connectWallet = useCallback(async () => {
     if (!(window as any).ethereum) {
       setErrorMessage("MetaMask (or a compatible wallet) is not installed.");
@@ -110,37 +112,83 @@ export const useWallet = (): WalletState => {
     setIsWrongNetwork(false);
   }, []);
 
-  // Set up listeners once on mount
-  if (typeof window !== 'undefined' && (window as any).ethereum) {
-    (window as any).ethereum.on('chainChanged', (chainId: string) => {
-        const chainIdNum = parseInt(chainId, 16); // chainId comes as hex string
-        if (chainIdNum !== TARGET_CHAIN_ID) {
-            setIsWrongNetwork(true);
-        } else {
-            setIsWrongNetwork(false);
-            // Re-fetch signer/address if provider exists
-            if (provider) connectWallet(); 
+  // Check for existing connection on mount
+  useEffect(() => {
+    const checkExistingConnection = async () => {
+      if (typeof window !== 'undefined' && (window as any).ethereum) {
+        try {
+          const accounts = await (window as any).ethereum.request({ method: 'eth_accounts' });
+          if (accounts.length > 0) {
+            const p = new ethers.BrowserProvider((window as any).ethereum);
+            const s = await p.getSigner();
+            const userAddress = await s.getAddress();
+            
+            setAddress(userAddress);
+            setProvider(p);
+            setSigner(s);
+            await checkNetwork(p);
+          }
+        } catch (error) {
+          console.error("Error checking existing connection:", error);
         }
-    });
-    
-    (window as any).ethereum.on('accountsChanged', (accounts: string[]) => {
-        if (accounts.length === 0) {
-            disconnectWallet();
-        } else {
-            // Re-connect to update signer
-            connectWallet(); 
-        }
-    });
-  }
+      }
+    };
 
-  return { 
-    address, 
-    provider, 
-    signer, 
-    errorMessage, 
-    isWrongNetwork, 
-    connectWallet, 
-    disconnectWallet, 
-    switchNetwork 
+    checkExistingConnection();
+  }, [checkNetwork]);
+
+  // Set up listeners
+  useEffect(() => {
+    if (typeof window !== 'undefined' && (window as any).ethereum) {
+      const handleChainChanged = (chainId: string) => {
+        const chainIdNum = parseInt(chainId, 16);
+        if (chainIdNum !== TARGET_CHAIN_ID) {
+          setIsWrongNetwork(true);
+        } else {
+          setIsWrongNetwork(false);
+          if (provider) {
+            connectWallet();
+          }
+        }
+      };
+      
+      const handleAccountsChanged = (accounts: string[]) => {
+        if (accounts.length === 0) {
+          disconnectWallet();
+        } else {
+          connectWallet();
+        }
+      };
+
+      (window as any).ethereum.on('chainChanged', handleChainChanged);
+      (window as any).ethereum.on('accountsChanged', handleAccountsChanged);
+
+      return () => {
+        (window as any).ethereum?.removeListener('chainChanged', handleChainChanged);
+        (window as any).ethereum?.removeListener('accountsChanged', handleAccountsChanged);
+      };
+    }
+  }, [provider, connectWallet, disconnectWallet]);
+
+  const value: WalletState = {
+    address,
+    provider,
+    signer,
+    errorMessage,
+    isWrongNetwork,
+    connectWallet,
+    disconnectWallet,
+    switchNetwork,
   };
+
+  return <WalletContext.Provider value={value}>{children}</WalletContext.Provider>;
 };
+
+export const useWallet = (): WalletState => {
+  const context = useContext(WalletContext);
+  if (context === undefined) {
+    throw new Error('useWallet must be used within a WalletProvider');
+  }
+  return context;
+};
+
