@@ -1,36 +1,201 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🔐 Rootstock Attestation Service (RAS) - Tutorial DApp
 
-## Getting Started
+> **Build a decentralized reputation system using attestations on Rootstock**
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 📖 What is RAS?
+
+**Rootstock Attestation Service (RAS)** is a decentralized attestation framework that enables verifiable credentials on the Rootstock blockchain. It allows you to create, issue, and verify on-chain attestations secured by Bitcoin's mining power.
+
+### Key Features:
+- ✅ **Bitcoin-Secured** - Leverage Bitcoin's security through Rootstock
+- 🔗 **EVM-Compatible** - Use familiar Web3 tools and libraries
+- 🌐 **GraphQL API** - Efficient querying through RAS Indexer
+- 📜 **Schema Registry** - Define custom attestation structures
+- 🔍 **Verifiable On-Chain** - Transparent and tamper-proof credentials
+
+---
+
+## 🎯 Tutorial Overview
+
+This tutorial demonstrates how to build a **loan reputation system** using RAS attestations. Users can:
+
+1. **Issue Attestations** - Lenders create verifiable loan repayment records
+2. **Verify Credentials** - Anyone can validate attestation authenticity
+3. **Calculate Reputation** - Build credit scores from attestation history
+
+---
+
+## 🏗️ Architecture
+
+### Frontend Layer
+- **Next.js + TypeScript** - Modern React framework
+- **Ethers.js** - Blockchain interaction library
+- **Schema Component** - Define attestation structures
+- **Issue Component** - Create and submit attestations
+- **Verify Component** - Query and validate attestations
+
+### Blockchain Layer
+- **Schema Registry Contract** - Stores attestation schemas on-chain
+- **Direct Contract Calls** - Register schemas and issue attestations
+
+---
+
+## 🚀 What You'll Learn
+
+### Smart Contract Interaction
+- Register custom attestation schemas
+- Issue attestations with encoded data
+- Query attestations by recipient or schema
+- Verify attestation authenticity on-chain
+
+### RAS Indexer Integration
+- Filter attestations by criteria
+- Decode attestation data
+- Build reputation scoring logic
+
+### Frontend Development
+- Connect wallets to RSK Testnet
+- Encode data with SchemaEncoder
+- Display attestation history
+- Create interactive verification tools
+
+---
+
+## 🔧 Technology Stack
+
+| Component | Technology |
+|-----------|-----------|
+| Frontend | Next.js, TypeScript, Tailwind CSS |
+| Blockchain | Rootstock Testnet (Chain ID: 31) |
+| Web3 Library | Ethers.js v6 |
+| Smart Contracts | Solidity 0.8.19 |
+| Indexer |
+| Deployment | Hardhat |
+
+---
+
+## 📚 Resources
+
+### Official Documentation
+- **RAS Documentation**: [dev.rootstock.io/dev-tools/attestations/ras](https://dev.rootstock.io/dev-tools/attestations/ras/)
+- **Rootstock Docs**: [dev.rootstock.io](https://dev.rootstock.io)
+- **RAS Indexer**: [ras.indexer.rootstock.io/graphql](https://ras.indexer.rootstock.io/graphql)
+
+### Testnet Information
+- **Network**: RSK Testnet
+- **Chain ID**: 31
+- **RPC URL**: `https://public-node.testnet.rsk.co`
+- **Explorer**: [explorer.testnet.rsk.co](https://explorer.testnet.rsk.co)
+- **Faucet**: Get test RBTC from RSK faucet
+
+### Schema Registry Contract
+```
+Address: 0x579c62355cD28014BaBF90e9BD430618859eea8205
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🎓 Tutorial Steps
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 1️⃣ Setup Environment
+- Install dependencies (Next.js, Ethers.js, Hardhat)
+- Configure RSK Testnet connection
+- Get test RBTC from faucet
 
-## Learn More
+### 2️⃣ Define Schema
+- Design attestation data structure
+- Register schema on Schema Registry
+- Get schema UID for future reference
 
-To learn more about Next.js, take a look at the following resources:
+### 3️⃣ Issue Attestations
+- Connect wallet to RSK Testnet
+- Encode attestation data
+- Submit transaction to blockchain
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 4️⃣ Verify Attestations
+- Decode attestation data
+- Display verification results
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 5️⃣ Build Reputation Logic
+- Aggregate user attestations
+- Calculate reputation score
+- Display credit rating (0-1000)
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 💡 Use Cases
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Financial Services
+- Undercollateralized lending based on reputation
+- Credit scoring for DeFi protocols
+- Loan default tracking
+
+### Identity & Credentials
+- Educational certificates
+- Employment verification
+- Professional licenses
+
+### Business & Commerce
+- Supplier ratings
+- Contract fulfillment records
+- Customer reviews
+
+---
+
+## 🌟 Why Rootstock?
+
+### Bitcoin Security
+Rootstock is merge-mined with Bitcoin, providing the highest level of blockchain security while enabling smart contracts.
+
+### Low Costs
+Transaction fees are significantly lower than Ethereum mainnet, making attestations economical at scale.
+
+### EVM Compatibility
+Use all existing Ethereum tools, libraries, and knowledge - no need to learn new paradigms.
+
+### Growing Ecosystem
+Active developer community and extensive documentation for building production-ready dApps.
+
+---
+
+## 🤝 Community & Support
+
+- **Discord**: Join the Rootstock developer community
+- **GitHub**: Contribute to RAS development
+- **Forum**: Ask questions and share projects
+- **Twitter**: Follow @rootstock_io for updates
+
+---
+
+## 📝 Next Steps
+
+After completing this tutorial, you can:
+
+- 🎨 **Customize schemas** for your specific use case
+- 🔗 **Integrate with other protocols** (DeFi, NFTs, DAOs)
+- 🚀 **Deploy to mainnet** for production use
+- 🏗️ **Build composable systems** using multiple attestations
+- 📊 **Create analytics dashboards** with RAS Indexer data
+
+---
+
+## ⚠️ Important Notes
+
+- This is a **testnet tutorial** - do not use private keys with real funds
+- Always verify attestations before making critical decisions
+- Test thoroughly before deploying to mainnet
+- Follow security best practices for production deployments
+
+---
+
+## 📄 License
+
+This tutorial is open-source and available for educational purposes.
+
+---
+
+**Built with ❤️ for the Rootstock community**
+
+*Secured by Bitcoin. Powered by Smart Contracts.*
