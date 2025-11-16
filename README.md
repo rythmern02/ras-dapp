@@ -90,11 +90,6 @@ This tutorial demonstrates how to build a **loan reputation system** using RAS a
 - **Explorer**: [explorer.testnet.rsk.co](https://explorer.testnet.rsk.co)
 - **Faucet**: Get test RBTC from RSK faucet
 
-### Schema Registry Contract
-```
-Address: 0x579c62355cD28014BaBF90e9BD430618859eea8205
-```
-
 ---
 
 ## 🎓 Tutorial Steps
